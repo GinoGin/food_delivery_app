@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/login_screen.dart';
 
 import 'constants.dart';
 import 'home_screen.dart';
@@ -19,7 +20,7 @@ class InitialScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
-      home: HomeScreen(),
+      home: LoginScreen(),
       title: appName,
       debugShowCheckedModeBanner: false,
     );

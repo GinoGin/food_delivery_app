@@ -31,8 +31,12 @@ dependencies:
   
 
 dev_dependencies:
+  flutter_launcher_name: "^0.0.1"
   flutter_test:
     sdk: flutter
+  
+flutter_launcher_name:
+  name: "Food App"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -55,6 +59,7 @@ flutter:
     - assets/noodles.png
     - assets/pizza.png
     - assets/food_bg.jpg
+    - assets/myAvatar.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

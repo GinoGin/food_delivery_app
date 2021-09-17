@@ -1,166 +1,226 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({ Key? key }) : super(key: key);
+import 'drawer_menu.dart';
+
+class HomeScreen extends StatefulWidget {
+  
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen>with TickerProviderStateMixin {
+  double  translateX=0.0;
+
+  double translateY=0.0;
+
+  double scale=1;
+
+  bool toggle=false;
+
+  late AnimationController _animationController;
+  
+  @override
+  void initState() {
+    _animationController = AnimationController(vsync: this,duration: Duration(milliseconds: 1000));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Delivery to",
-            style: Theme.of(context).textTheme.subtitle2,),
-            InkWell(
-              onTap:(){
-                print("Clicked");
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+    return Stack(
+      children: [
+        DrawerMenu(),
+        AnimatedContainer(
+          duration: Duration(milliseconds: 500),
+          transform: Matrix4.translationValues(translateX, translateY, 0)..scale(scale),
+          child: Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                icon: AnimatedIcon(
+                  icon: AnimatedIcons.menu_arrow,
+                  color: Colors.black,
+                  progress: _animationController),
+                onPressed: (){
+                  toggle=!toggle;
+                  if(toggle){
+                    print("true");
+                    translateX=200;
+                    translateY=0;
+                    scale=1;
+                    _animationController.forward();
+                  }
+                  else{
+                    print("false");
+                    translateX=0;
+                    translateY=0;
+                    scale=1;
+                    _animationController.reverse();
+                  }
+                  setState((){});
+                }, 
+              // icon: Icon(Icons.menu, 
+              // color: Colors.black,
+              // ),
+              ),
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Search Location" ,
-                  style: Theme.of(context).textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold,fontSize: 20) ,),
-                  Icon(Icons.keyboard_arrow_down , color: Colors.green,size: 30,),
+                  Text("Delivery to",
+                  style: Theme.of(context).textTheme.subtitle2,),
+                  InkWell(
+                    onTap:(){
+                      print("Clicked");
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Search Location" ,
+                        style: Theme.of(context).textTheme.subtitle1!.copyWith(fontWeight: FontWeight.bold,fontSize: 20) ,),
+                        Icon(Icons.keyboard_arrow_down , color: Colors.green,size: 30,),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  
-                  Expanded(
-                    child: Container(
-                      height: 40,
-                      margin: EdgeInsets.symmetric(vertical: 8),
-                      padding: EdgeInsets.only(left: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Material(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(20),
-                        child: InkWell(
-                          onTap: (){},
-                          borderRadius: BorderRadius.circular(20),
-                          child: Row(
-                          
-                            children: [
-                          
-                            Icon(Icons.search),
-                            SizedBox(width: 10,),
-                            Text("Search food",
-                            style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.black45)),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  
-                  IconButton(
-                    onPressed: (){},
-                    icon: Icon(Icons.filter_center_focus)
-                    ),
-                ],
-              ),
-              SizedBox(height: 10),
-              subtitle(context,"Category"),
-              
-              Container(
-                height: 110,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  //physics: NeverScrollableScrollPhysics(),
-                  itemCount: listCards.length,
-                  itemBuilder: (context, index){
-                    return CategoryModel(categoryModel: listCards[index],);
-                  }
-                ),
-              ),
-              subtitle(context, "Popular"),
-              for(int i=0;i<popularItem.length;i++) ...{
-                Container(
-                  
-                decoration: BoxDecoration(
-                  
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade300,
-                      spreadRadius: 5,
-                      blurRadius: 5,
-        
-                    ),
-                  ]
-                ),
-                margin: EdgeInsets.only(top: 8),
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      height: 220,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(topLeft:Radius.circular(15),topRight: Radius.circular(15)),
-                        image:DecorationImage(image: NetworkImage(popularItem[i].imgUrl),
-                        fit: BoxFit.cover,
-                      ),
-                      ),
-                      ),
-        
-                    Text(popularItem[i].title,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    ),
                     Row(
                       children: [
-                        Icon(Icons.star,
-                        color: Colors.yellow.shade800,),
-                        Text(" (250 ratings)"),
-                        Spacer(),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10 ),
-                          child: Text("\$50",
-                          style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18
-                          ),
+                        
+                        Expanded(
+                          child: Container(
+                            height: 40,
+                            margin: EdgeInsets.symmetric(vertical: 8),
+                            padding: EdgeInsets.only(left: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Material(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(20),
+                              child: InkWell(
+                                onTap: (){},
+                                borderRadius: BorderRadius.circular(20),
+                                child: Row(
+                                
+                                  children: [
+                                
+                                  Icon(Icons.search),
+                                  SizedBox(width: 10,),
+                                  Text("Search food",
+                                  style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.black45)),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ),
+                        
+                        IconButton(
+                          onPressed: (){},
+                          icon: Icon(Icons.filter_center_focus)
+                          ),
                       ],
                     ),
-                    SizedBox(
-                      height: 10,
-                    )
-                  ],
+                    SizedBox(height: 10),
+                    subtitle(context,"Category"),
+                    
+                    Container(
+                      height: 110,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        //physics: NeverScrollableScrollPhysics(),
+                        itemCount: listCards.length,
+                        itemBuilder: (context, index){
+                          return CategoryModel(categoryModel: listCards[index],);
+                        }
+                      ),
+                    ),
+                    subtitle(context, "Popular"),
+                    for(int i=0;i<popularItem.length;i++) ...{
+                      Container(
+                      
+                      decoration: BoxDecoration(
+                        
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade200,
+                            spreadRadius: 5,
+                            blurRadius: 10,
+                          
+                          ),
+                        ]
+                      ),
+                      margin: EdgeInsets.only(top: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 220,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(topLeft:Radius.circular(15),topRight: Radius.circular(15)),
+                              image:DecorationImage(image: NetworkImage(popularItem[i].imgUrl),
+                              fit: BoxFit.cover,
+                            ),
+                            ),
+                            ),
+              
+                          Text(popularItem[i].title,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          ),
+                          Row(
+                            children: [
+                              Icon(Icons.star,
+                              color: Colors.yellow.shade800,),
+                              Text(" (250 ratings)"),
+                              Spacer(),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10 ),
+                                child: Text("\$50",
+                                style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18
+                                ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          )
+                        ],
+                      ),
+                      
+                    ),
+                    
+                    },
+                    
+                  ],          
                 ),
-                
               ),
-              
-              },
-              
-            ],          
+            ),        
           ),
         ),
-      ),        
+        
+      ],
     );
   }
 
